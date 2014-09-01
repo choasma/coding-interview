@@ -45,23 +45,26 @@ void PrintList(listPointer l,char* s){
 	}
 	printf("\n");
 }
-void Deletion(listPointer l,int index){
-	listPointer trail = l;
+void Deletion(listPointer *l,int index){
+	listPointer trail = *l;
+	listPointer head = *l;
 	if(index>=SIZE){
-		while(l->link->link) l = l->link;
-		trail = l;
+		while((*l)->link->link) *l = (*l)->link;
+		trail = *l;
 		trail->link = NULL;
-		l = l->link;
-		free(l);
+		*l = (*l)->link;
+		free(*l);
 	}else if(index<=1){
-		l = l->link;
+		head = head->link;
+		*l = (*l)->link;
 		free(trail);
 	}else{
-		for(int i=0;i<index-1;i++) l = l->link;
+		for(int i=0;i<index-1;i++) (*l) = (*l)->link;
 		for(int i=0;i<index-2;i++) trail = trail->link;
-		trail->link = l->link;
-		free(l);
+		trail->link = (*l)->link;
+		free(*l);
 	}
+	*l = head;
 }
 void Create(listPointer l,int size){
 	for(int i=0;i<size;i++){
@@ -101,7 +104,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			case 2://delete value from the list with position index	
 				printf("Please enter a position number:");
 				scanf("%d",&index);
-				Deletion(first,index);
+				Deletion(&first,index);
 				PrintList(first,"After Delete");
 				break;
 		}
