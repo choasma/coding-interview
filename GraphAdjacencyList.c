@@ -1,6 +1,6 @@
-// Graph.cpp : Defines the entry point for the console application.
+// StackLinkList.cpp : Defines the entry point for the console application.
 /*
- * the graph implemented by link list using pointer array
+ * the multiple stacks implemented by link list using pointer array
  * created by fireass @ 9/1/2014
  */
 
@@ -23,6 +23,8 @@ typedef struct node{
 };
 
 int i,j;
+bool visited[MAX_VERTICES];
+
 
 void GraphGeneration(NodePointer *arr,int *data){
 	
@@ -37,10 +39,33 @@ void GraphGeneration(NodePointer *arr,int *data){
 	}
 }
 
+void BFS(NodePointer *ptr){
+	NodePointer p;
+	bool *visited = (bool*)malloc(MAX_VERTICES*sizeof(bool));
+	memset(visited,0,MAX_VERTICES);
+
+	for(int i=0;i<MAX_VERTICES;i++){
+		if(!visited[i]){
+			visited[i] = true;
+			printf("%d ",i);
+			p = ptr[i];
+			p = p->link;
+			while(p){
+				if(!visited[p->index])printf("%d ",p->index);
+				visited[p->index] = true;
+				p = p->link;
+			}
+		}
+	}
+	printf("\n");
+}
+
 void GraphPrinter(NodePointer *ptr){
 	NodePointer p = *ptr;
+	//printf("ptr=%d *ptr=%d p=%d\n",ptr,*ptr,p);
 	for(i=0;i<MAX_VERTICES;i++){
 		p = ptr[i];
+		//printf("ptr[%d]=%d\n",i,ptr[i]);
 		printf("[%d]->",i);
 		p = p->link;
 		while(p){
@@ -53,11 +78,14 @@ void GraphPrinter(NodePointer *ptr){
 }
 
 
+
 int main(void) {
 	
 	NodePointer *N = (NodePointer*)malloc(MAX_VERTICES*sizeof(NodePointer));
 	for(i=0;i<MAX_VERTICES;i++) {N[i] = (NodePointer)malloc(sizeof(node)); N[i]->link=NULL;}
 	N[MAX_VERTICES] = NULL;
+	memset(visited,false,MAX_VERTICES);
+
 
 	int data[][2] = {
 		{0,1},{0,2},{0,5},{1,3},{1,4},{2,0},{2,5},{2,6},
@@ -67,7 +95,7 @@ int main(void) {
 	printf("%d\n",*N);
 	GraphGeneration(N,data[0]);
 	GraphPrinter(N);
-
+	BFS(N);
 	system("pause");
 	return 0;
 }
